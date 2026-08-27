@@ -142,7 +142,7 @@ cd TourMateAI
    flask seed-db
 
    # Seeds sample hotels
-   python scripts/seed_hotels.py
+   python -m scripts.seed_hotels
    ```
 
 ---
