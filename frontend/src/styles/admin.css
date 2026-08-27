@@ -1,0 +1,384 @@
+/* ============================================================================
+   Admin dashboard — tabs, stat tiles, bar chart, management tables, form modal.
+   Functional-clean: same tokens/components as the rest of the app, less flourish.
+   ========================================================================== */
+
+/* ---- Tabs (segmented control) ---------------------------------------------*/
+
+.adm-tabs {
+  display: inline-flex;
+  gap: var(--space-1);
+  padding: var(--space-1);
+  margin-bottom: var(--space-8);
+  background-color: var(--color-surface-alt);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+}
+
+.adm-tab {
+  padding: 0.45rem var(--space-5);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--speed-fast) var(--ease),
+    color var(--speed-fast) var(--ease),
+    box-shadow var(--speed-fast) var(--ease);
+}
+
+.adm-tab:hover { color: var(--color-text); }
+
+.adm-tab[aria-selected='true'] {
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-xs);
+}
+
+/* ---- Stat tiles ------------------------------------------------------------*/
+
+.adm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.adm-stat {
+  padding: var(--space-5) var(--space-6);
+}
+
+.adm-stat-label {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-muted);
+}
+
+.adm-stat-value {
+  margin-top: var(--space-2);
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-text);
+}
+
+.adm-stat-note {
+  margin-top: var(--space-1);
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+/* ---- Most-viewed bar chart --------------------------------------------------
+   Single-series horizontal bar list: thin marks (12px), 4px rounded data-end,
+   square at the baseline; labels/values wear text tokens, never the bar color. */
+
+.adm-chart-card { padding: var(--space-6); }
+
+.adm-chart-title {
+  font-size: var(--text-base);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-1);
+}
+
+.adm-chart-sub {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-5);
+}
+
+.adm-bars {
+  display: flex;
+  flex-direction: column;
+}
+
+.adm-bar-row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 14rem) 1fr;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-2) var(--space-2);
+  border-radius: var(--radius-sm);
+}
+
+.adm-bar-row:hover { background-color: var(--gray-25); }
+
+.adm-bar-name {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.adm-bar-track {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.adm-bar {
+  height: 12px;
+  background-color: var(--color-primary);
+  border-radius: 0 4px 4px 0; /* rounded data-end, square baseline */
+  min-width: 2px;
+  flex: none;
+  transition: width var(--speed-slow) var(--ease);
+}
+
+.adm-bar-value {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+}
+
+/* ---- Panel toolbar (search + actions) ---------------------------------------*/
+
+.adm-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-5);
+  flex-wrap: wrap;
+}
+
+.adm-toolbar .input { max-width: 20rem; }
+
+.adm-toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.adm-count {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---- Tables ------------------------------------------------------------------*/
+
+.adm-table-wrap { overflow-x: auto; }
+
+.adm-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--text-sm);
+}
+
+.adm-table th {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.adm-table td {
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text-secondary);
+  border-bottom: 1px solid var(--color-border-subtle);
+  vertical-align: middle;
+}
+
+.adm-table tbody tr:last-child td { border-bottom: none; }
+
+.adm-table tbody tr:hover { background-color: var(--gray-25); }
+
+.adm-table .num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.adm-cell-main {
+  font-weight: var(--weight-medium);
+  color: var(--color-text);
+}
+
+.adm-cell-sub {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* Entity cell: thumbnail/avatar + name stacked text */
+.adm-entity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 14rem;
+}
+
+.adm-thumb {
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--color-surface-alt);
+}
+
+.adm-thumb-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex: none;
+  border-radius: var(--radius-sm);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+}
+
+.adm-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex: none;
+  border-radius: var(--radius-full);
+  background-color: var(--color-accent-soft);
+  color: var(--color-accent);
+  font-weight: var(--weight-semibold);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+}
+
+/* Muted "user" role text so admin badges stand out */
+.adm-role-user { color: var(--color-text-muted); }
+
+/* Row actions */
+.adm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+.adm-btn-sm {
+  padding: 0.35rem var(--space-3);
+  font-size: var(--text-xs);
+  border-radius: var(--radius-sm);
+}
+
+/* Inline delete confirmation */
+.adm-confirm-label {
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  color: var(--color-danger);
+  align-self: center;
+}
+
+/* ---- Empty / loading states ---------------------------------------------------*/
+
+.adm-empty {
+  padding: var(--space-10) var(--space-6);
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* ---- Modal (add/edit attraction) ------------------------------------------------*/
+
+.adm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background-color: rgba(43, 45, 66, 0.45); /* ink-900 @ 45% */
+}
+
+.adm-modal {
+  width: 100%;
+  max-width: 34rem;
+  max-height: calc(100vh - var(--space-8));
+  overflow-y: auto;
+  padding: var(--space-6);
+  box-shadow: var(--shadow-lg);
+}
+
+.adm-modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-5);
+}
+
+.adm-modal-head h2 { font-size: var(--text-xl); }
+
+.adm-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  background: none;
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    background-color var(--speed-fast) var(--ease),
+    color var(--speed-fast) var(--ease);
+}
+
+.adm-modal-close:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+.adm-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-4);
+}
+
+.adm-modal textarea.input {
+  resize: vertical;
+  min-height: 5.5rem;
+}
+
+.adm-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  margin-top: var(--space-6);
+}
+
+.adm-modal .alert { margin-top: var(--space-4); }
+
+/* ---- Image upload (add/edit attraction) -----------------------------------*/
+
+.adm-image-upload {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.adm-image-preview {
+  width: 3.5rem;
+  height: 3.5rem;
+  flex: none;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  background-color: var(--color-surface-alt);
+}
+
+@media (max-width: 640px) {
+  .adm-field-row { grid-template-columns: 1fr; }
+  .adm-bar-row { grid-template-columns: minmax(6rem, 8rem) 1fr; }
+}

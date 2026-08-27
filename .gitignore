@@ -1,0 +1,104 @@
+# =============================================================================
+# TourMateAI .gitignore
+# =============================================================================
+
+# ===== Environment & Secrets =====
+.env
+.env.*
+!.env.example
+!.env.*.example
+serviceAccountKey.json
+*/serviceAccountKey.json
+firebase-credentials.json
+*/firebase-credentials.json
+*.pem
+*.key
+
+# ===== Python & Virtual Environments =====
+venv/
+*/venv/
+.venv/
+*/.venv/
+env/
+*/env/
+ENV/
+__pycache__/
+*/__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+*/.egg-info/
+dist/
+build/
+.pytest_cache/
+*/.pytest_cache/
+.mypy_cache/
+*/.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# ===== Node / Frontend =====
+node_modules/
+*/node_modules/
+frontend/dist/
+frontend/build/
+.vite/
+*/.vite/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ===== User Uploads & Temp Files =====
+backend/uploads/*
+!backend/uploads/.gitkeep
+backend/uploads/attractions/*
+!backend/uploads/attractions/.gitkeep
+temp_pdfs/
+backend/temp_pdfs/
+
+# ===== AI Models, Embeddings & Large Artifacts =====
+*.keras
+*.h5
+*.pt
+*.pth
+*.pkl
+*.joblib
+*.onnx
+
+# AI Lab datasets and models
+ai_lab/models/*
+!ai_lab/models/.gitkeep
+ai_lab/datasets/raw/*
+!ai_lab/datasets/raw/.gitkeep
+ai_lab/datasets/processed/*
+!ai_lab/datasets/processed/.gitkeep
+
+# Vector Stores & Local Databases
+chroma_db/
+*/chroma_db/
+backend/data/chroma_fares/
+data/chroma_fares/
+*.sqlite3
+*.db
+
+# ===== OS & IDE Artifacts =====
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+*.swp
+*.swo
+*~
+.claude/

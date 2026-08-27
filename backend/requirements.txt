@@ -1,0 +1,50 @@
+# TourMateAI backend dependencies.
+#
+# Pinned to the versions first installed during Phase 0 (Python 3.10.11, Windows).
+# These are the DIRECT/top-level deps only ?" transitive deps (torch, grpcio, etc.)
+# are resolved by pip and not listed here. To reproduce the exact full tree, use
+# `pip freeze`. To upgrade a package, bump its pin here and re-run pip install.
+
+# --- Web framework (teammate: app skeleton) ---
+Flask==3.1.3
+flask-cors==6.0.5
+python-dotenv==1.2.2
+
+# --- Database ---
+SQLAlchemy==2.0.51
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.1.0          # Alembic migrations
+PyMySQL==1.2.0                 # MySQL driver
+
+# --- Auth ---
+firebase-admin==7.5.0
+
+# --- External API services ---
+requests==2.34.2
+googlemaps==4.10.0
+
+# --- AI: Recommendation engine (me) ---
+scikit-learn==1.7.2
+pandas==2.3.3
+numpy==2.2.6
+
+# --- AI: RAG chatbot (me) ---
+google-generativeai==0.8.6    # Gemini
+chromadb==1.5.9
+sentence-transformers==5.6.0  # pulls in torch (transitive)
+
+# --- AI: Image recognition (me) ---
+tensorflow==2.20.0
+pillow==12.3.0
+
+# --- Testing ---
+pytest==9.1.1
+
+# --- AI: Multi-Agent Itinerary Planner (LangGraph) ---
+langgraph>=0.1.19
+langchain>=0.2.14
+langchain-core>=0.2.33
+langchain-google-genai>=1.0.8
+
+# --- Translation ---
+deep-translator==1.11.4

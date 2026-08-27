@@ -1,0 +1,12 @@
+# Normalize line endings across the team to avoid CRLF/LF diff noise & fake conflicts.
+* text=auto eol=lf
+
+# Binary files — never normalize.
+*.pdf   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.h5    binary
+*.keras binary
+*.joblib binary
+*.pkl   binary

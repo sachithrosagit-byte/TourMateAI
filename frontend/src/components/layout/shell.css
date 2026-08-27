@@ -1,0 +1,467 @@
+/* ============================================================================
+   App shell — navbar, user dropdown, mobile drawer, footer, page container.
+   ========================================================================== */
+
+.app-shell {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.app-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- Logo ------------------------------------------------------------------*/
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.logo-mark {
+  height: 76px;
+  width: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.logo-lg .logo-mark { height: 108px; }
+
+/* ---- Navbar ------------------------------------------------------------------*/
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-dropdown);
+  background-color: rgba(255, 255, 255, 0.92); /* white @ 92% */
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.navbar-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  height: var(--navbar-height);
+  padding: 0 var(--space-6);
+  display: flex;
+  align-items: center;
+  gap: var(--space-6);
+}
+
+.navbar-brand { flex-shrink: 0; }
+
+.navbar-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin-left: var(--space-4);
+}
+
+.nav-link {
+  padding: var(--space-2) var(--space-4);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  transition:
+    background-color var(--speed-fast) var(--ease),
+    color var(--speed-fast) var(--ease);
+}
+
+.nav-link:hover {
+  color: var(--color-text);
+  background-color: var(--gray-50);
+}
+
+.nav-link-active,
+.nav-link-active:hover {
+  color: var(--color-primary-hover);
+  background-color: var(--color-primary-soft);
+  font-weight: var(--weight-semibold);
+}
+
+.navbar-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+/* ---- Avatar + dropdown --------------------------------------------------- */
+
+.user-menu { position: relative; }
+
+.avatar-btn {
+  padding: 2px;
+  background: none;
+  border: 2px solid transparent;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: border-color var(--speed-fast) var(--ease);
+}
+
+.avatar-btn:hover,
+.avatar-btn[aria-expanded='true'] {
+  border-color: var(--color-primary-tint);
+}
+
+.avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.375rem;
+  height: 2.375rem;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--ocean-500), var(--ocean-800));
+  color: var(--color-text-inverse);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  letter-spacing: 0.02em;
+  user-select: none;
+}
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + var(--space-2));
+  right: 0;
+  min-width: 14rem;
+  padding: var(--space-2);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  animation: dropdown-in var(--speed) var(--ease);
+}
+
+@keyframes dropdown-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-header {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-3) var(--space-3);
+}
+
+.dropdown-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  color: var(--color-text);
+  text-transform: capitalize;
+}
+
+.dropdown-email {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-divider {
+  height: 1px;
+  margin: var(--space-2) 0;
+  background-color: var(--color-border-subtle);
+}
+
+.dropdown-item {
+  display: block;
+  width: 100%;
+  padding: var(--space-2) var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  text-align: left;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--speed-fast) var(--ease);
+}
+
+.dropdown-item:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+.dropdown-item-danger { color: var(--color-danger); }
+.dropdown-item-danger:hover {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+/* ---- Hamburger (mobile only) ---------------------------------------------- */
+
+.hamburger {
+  display: none;
+  padding: var(--space-2);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.hamburger:hover { background-color: var(--gray-50); }
+
+/* ---- Mobile drawer --------------------------------------------------------- */
+
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  background-color: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--speed-slow) var(--ease);
+}
+
+.drawer-overlay-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: var(--z-drawer);
+  width: min(19rem, 85vw);
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-lg);
+  transform: translateX(-100%);
+  visibility: hidden;
+  transition:
+    transform var(--speed-slow) var(--ease),
+    visibility var(--speed-slow);
+}
+
+.drawer-open {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-5) var(--space-5) var(--space-4);
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.drawer-close {
+  padding: var(--space-2);
+  background: none;
+  border: none;
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.drawer-close:hover {
+  background-color: var(--gray-50);
+  color: var(--color-text);
+}
+
+.drawer-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-4);
+}
+
+.drawer-link {
+  display: block;
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--weight-medium);
+  text-align: left;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background-color var(--speed-fast) var(--ease);
+}
+
+.drawer-link:hover {
+  background-color: var(--color-surface-alt);
+  color: var(--color-text);
+}
+
+.drawer-link-active,
+.drawer-link-active:hover {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-hover);
+  font-weight: var(--weight-semibold);
+}
+
+.drawer-footer {
+  padding: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.drawer-user {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-4) var(--space-3);
+}
+
+.drawer-user-name {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  text-transform: capitalize;
+}
+
+.drawer-user-email {
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.drawer-logout { color: var(--color-danger); }
+.drawer-logout:hover {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+/* ---- Footer ------------------------------------------------------------------*/
+
+.footer {
+  margin-top: var(--space-16);
+  background-color: var(--gray-50);
+  border-top: 1px solid var(--color-border-subtle);
+}
+
+.footer-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6) var(--space-8);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-8);
+}
+
+.footer-brand { max-width: 20rem; }
+
+.footer-tagline {
+  margin-top: var(--space-3);
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+.footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.footer-heading {
+  margin-bottom: var(--space-1);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--color-text-muted);
+}
+
+.footer-col a {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.footer-col a:hover { color: var(--color-primary-hover); }
+
+.footer-bottom {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-4) var(--space-6);
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  border-top: 1px solid var(--color-border);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+/* ---- Page container --------------------------------------------------------- */
+
+.page {
+  width: 100%;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-10) var(--space-6);
+}
+
+.page-narrow { max-width: var(--container-narrow); }
+.page-wide   { max-width: var(--container-wide); }
+
+.page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-8);
+}
+
+.page-title { font-size: var(--text-3xl); }
+
+.page-subtitle {
+  margin-top: var(--space-2);
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+
+.page-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+/* ---- Responsive ------------------------------------------------------------- */
+
+@media (max-width: 820px) {
+  /* Trim the bar (and the banner logo) on phones. Overriding the *token* keeps
+     everything that derives from it in sync — the chat viewport height and the
+     sticky sidebar offsets both read --navbar-height. */
+  :root { --navbar-height: 4.75rem; } /* 76px */
+  .logo-mark { height: 58px; }
+
+  .navbar-nav { display: none; }
+  .hamburger { display: inline-flex; }
+
+  .navbar-inner {
+    gap: var(--space-3);
+    padding: 0 var(--space-4);
+  }
+
+  .page { padding: var(--space-8) var(--space-4); }
+
+  .page-title { font-size: var(--text-2xl); }
+  .page-subtitle { font-size: var(--text-base); }
+
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-6);
+    padding: var(--space-8) var(--space-4) var(--space-6);
+  }
+
+  .footer-bottom {
+    padding: var(--space-4);
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+}

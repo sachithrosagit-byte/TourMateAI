@@ -1,0 +1,131 @@
+/* ============================================================================
+   Page-level styles: home hero, feature cards, empty states, profile.
+   ========================================================================== */
+
+/* ---- Home ------------------------------------------------------------------*/
+
+.home-hero {
+  max-width: 38rem;
+  padding: var(--space-6) 0 var(--space-10);
+}
+
+.home-greeting {
+  margin-top: var(--space-5);
+  font-size: var(--text-4xl);
+}
+
+.home-name {
+  color: var(--color-primary);
+  text-transform: capitalize;
+}
+
+.home-lead {
+  margin-top: var(--space-4);
+  font-size: var(--text-lg);
+  color: var(--color-text-muted);
+}
+
+/* (The old home feature-card styles moved to landing.css, which owns the
+   .feature-* classes now.) */
+
+/* ---- Coming-soon empty state -------------------------------------------------*/
+
+.coming-soon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-16) var(--space-6);
+}
+
+.coming-soon-icon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-4);
+}
+
+.coming-soon h3 { margin-bottom: var(--space-3); }
+
+.coming-soon p {
+  max-width: 28rem;
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+
+/* Profile page styles now live in styles/profile.css. */
+
+/* ---- Error / 404 states ------------------------------------------------------*/
+
+/* Full-viewport wrapper for the top-level crash screen (rendered outside the
+   app shell by ErrorBoundary, so it centres itself on the page). */
+.error-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+}
+
+/* Shared card for the 404 page and the crash fallback. */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-3);
+  max-width: 32rem;
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-6);
+}
+
+.error-state-code {
+  font-family: var(--font-display);
+  font-size: 4rem;
+  font-weight: var(--weight-bold);
+  line-height: 1;
+  color: var(--color-primary);
+}
+
+.error-state-icon {
+  font-size: 2.75rem;
+  line-height: 1;
+}
+
+.error-state-title { margin: 0; }
+
+.error-state-text {
+  max-width: 28rem;
+  color: var(--color-text-muted);
+}
+
+/* Dev-only stack trace; hidden in production builds (see ErrorBoundary). */
+.error-state-detail {
+  width: 100%;
+  max-height: 12rem;
+  overflow: auto;
+  text-align: left;
+  font-size: var(--text-xs);
+  background: var(--color-surface-subtle, #f5f5f4);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.error-state-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  justify-content: center;
+  margin-top: var(--space-3);
+}
+
+@media (max-width: 820px) {
+  .home-greeting { font-size: var(--text-3xl); }
+  .home-hero { padding-bottom: var(--space-8); }
+
+  .error-state { padding: var(--space-10) var(--space-4); }
+  .error-state-code { font-size: 3.25rem; }
+  .error-state-actions { width: 100%; }
+  .error-state-actions .btn { flex: 1 1 auto; }
+}
