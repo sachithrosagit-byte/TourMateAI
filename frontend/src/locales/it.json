@@ -402,6 +402,11 @@
     "historyTitle": "Identificazioni precedenti",
     "historyError": "Non siamo riusciti a caricare i tuoi caricamenti precedenti. Aggiorna la pagina per riprovare.",
     "historyEmpty": "Le foto che identifichi appariranno qui, così potrai ritrovarle più tardi.",
+    "deleteHistoryItem": "Elimina identificazione",
+    "confirmDelete": "Eliminare questa identificazione dalla cronologia?",
+    "clearAll": "Cancella cronologia",
+    "confirmClearAll": "Sei sicuro di voler cancellare tutta la cronologia delle identificazioni?",
+    "deleteError": "Impossibile eliminare l'identificazione. Riprova.",
     "errorFormat": "Per favore scegli un'immagine JPG, PNG o WebP.",
     "errorSize": "Quella foto è troppo grande — il limite è",
     "errorAnalyze": "Non siamo riusciti ad analizzare quella foto. Per favore riprova."
