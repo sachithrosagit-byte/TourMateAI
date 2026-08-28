@@ -18,9 +18,11 @@ these routes expand it into a full serialized attraction so the frontend can
 link straight to the detail page without a second round-trip.
 
 Routes (registered under ``/api``):
-  - ``POST /api/images/recognize``        auth: upload a photo, get it identified
-  - ``GET  /api/images``                  auth: the user's past uploads + results
-  - ``GET  /api/images/uploads/<name>``   public: serve a stored image file
+  - ``POST   /api/images/recognize``        auth: upload a photo, get it identified
+  - ``GET    /api/images``                  auth: the user's past uploads + results
+  - ``DELETE /api/images/<id>``             auth: delete a specific past upload
+  - ``DELETE /api/images``                  auth: delete all past uploads for the user
+  - ``GET    /api/images/uploads/<name>``   public: serve a stored image file
 """
 
 import os
@@ -170,3 +172,48 @@ def serve_upload(filename):
     """
     # send_from_directory guards against path traversal in ``filename``.
     return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
+
+
+@images_bp.delete("/images/<int:image_id>")
+@require_auth
+def delete_upload(image_id):
+    """Delete a past identification and its stored image file."""
+    upload = UploadedImage.query.filter_by(id=image_id, user_id=g.current_user.id).first()
+    if not upload:
+        return json_error("Identification not found.", 404)
+
+    # Clean up file on disk if stored locally
+    if upload.image_url and "/api/images/uploads/" in upload.image_url:
+        filename = upload.image_url.split("/api/images/uploads/")[-1]
+        filepath = os.path.join(current_app.config["UPLOAD_FOLDER"], filename)
+        if os.path.exists(filepath):
+            try:
+                os.remove(filepath)
+            except OSError:
+                pass
+
+    db.session.delete(upload)
+    db.session.commit()
+    return jsonify({"deleted": image_id})
+
+
+@images_bp.delete("/images")
+@require_auth
+def clear_uploads():
+    """Delete all past identifications for the current user."""
+    uploads = UploadedImage.query.filter_by(user_id=g.current_user.id).all()
+    upload_dir = current_app.config["UPLOAD_FOLDER"]
+
+    for upload in uploads:
+        if upload.image_url and "/api/images/uploads/" in upload.image_url:
+            filename = upload.image_url.split("/api/images/uploads/")[-1]
+            filepath = os.path.join(upload_dir, filename)
+            if os.path.exists(filepath):
+                try:
+                    os.remove(filepath)
+                except OSError:
+                    pass
+        db.session.delete(upload)
+
+    db.session.commit()
+    return jsonify({"deleted_all": True, "count": len(uploads)})
