@@ -13,7 +13,13 @@ import { useTranslation } from 'react-i18next'
 import PageContainer from '../components/layout/PageContainer'
 import AttractionImage from '../components/explore/AttractionImage'
 import { scenes } from '../assets/photos'
-import { fetchUploadHistory, recognizeImage, uploadedImageUrl } from '../services/images'
+import {
+  clearAllUploadHistory,
+  deleteUploadedImage,
+  fetchUploadHistory,
+  recognizeImage,
+  uploadedImageUrl,
+} from '../services/images'
 import '../styles/identify.css'
 
 // Sample shots fanned out in the dropzone — sets expectations for what the
@@ -80,7 +86,7 @@ function CameraIcon() {
 }
 
 /** One past upload. Links to the matched attraction when there is one. */
-function HistoryItem({ item }) {
+function HistoryItem({ item, onDelete, isDeleting }) {
   const { t } = useTranslation()
   const pct = Math.round((item.confidence || 0) * 100)
   const { tone } = confidenceTone(item.confidence || 0, t)
@@ -91,6 +97,12 @@ function HistoryItem({ item }) {
         year: 'numeric',
       })
     : null
+
+  const handleDelete = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onDelete(item)
+  }
 
   const body = (
     <>
@@ -130,6 +142,31 @@ function HistoryItem({ item }) {
           />
         </svg>
       )}
+      <button
+        type="button"
+        className="idf-history-delete-btn"
+        onClick={handleDelete}
+        title={t('identify.deleteHistoryItem')}
+        aria-label={t('identify.deleteHistoryItem')}
+        disabled={isDeleting}
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <polyline points="3 6 5 6 21 6" />
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+          <line x1="10" y1="11" x2="10" y2="17" />
+          <line x1="14" y1="11" x2="14" y2="17" />
+        </svg>
+      </button>
     </>
   )
 
@@ -157,6 +194,8 @@ export default function Identify() {
   const [history, setHistory] = useState([])
   const [historyLoading, setHistoryLoading] = useState(true)
   const [historyError, setHistoryError] = useState(false)
+  const [deletingId, setDeletingId] = useState(null)
+  const [deleteError, setDeleteError] = useState(null)
 
   const inputRef = useRef(null)
 
@@ -257,6 +296,34 @@ export default function Identify() {
 
   const matched = result?.matched_attraction
 
+  const handleDeleteItem = async (item) => {
+    if (!window.confirm(t('identify.confirmDelete'))) return
+    setDeletingId(item.id)
+    setDeleteError(null)
+    try {
+      await deleteUploadedImage(item.id)
+      setHistory((prev) => prev.filter((i) => i.id !== item.id))
+    } catch (err) {
+      setDeleteError(t('identify.deleteError'))
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
+  const handleClearAll = async () => {
+    if (!window.confirm(t('identify.confirmClearAll'))) return
+    setDeletingId('all')
+    setDeleteError(null)
+    try {
+      await clearAllUploadHistory()
+      setHistory([])
+    } catch (err) {
+      setDeleteError(t('identify.deleteError'))
+    } finally {
+      setDeletingId(null)
+    }
+  }
+
   return (
     <PageContainer
       title={t('identify.pageTitle')}
@@ -276,6 +343,7 @@ export default function Identify() {
         <label
           htmlFor="idf-file-input"
           className={`idf-dropzone card ${dragActive ? 'idf-dropzone-active' : ''}`}
+          onDragEnter={handleDrag(true)}
           onDragOver={handleDrag(true)}
           onDragLeave={handleDrag(false)}
           onDrop={handleDrop}
@@ -338,7 +406,7 @@ export default function Identify() {
                 <button
                   type="button"
                   className="btn btn-ghost"
-                  onClick={() => inputRef.current?.click()}
+                  onClick={reset}
                 >
                   {t('identify.chooseDiffBtn')}
                 </button>
@@ -431,7 +499,22 @@ export default function Identify() {
       )}
 
       <section className="idf-history" aria-label={t('identify.historyTitle')}>
-        <h2 className="idf-history-title">{t('identify.historyTitle')}</h2>
+        <div className="idf-history-head">
+          <h2 className="idf-history-title">{t('identify.historyTitle')}</h2>
+          {history.length > 0 && !historyLoading && (
+            <button
+              type="button"
+              className="btn btn-ghost btn-sm idf-history-clear-btn"
+              onClick={handleClearAll}
+              disabled={deletingId === 'all'}
+            >
+              {t('identify.clearAll')}
+            </button>
+          )}
+        </div>
+
+        {deleteError && <div className="alert alert-error">{deleteError}</div>}
+
         {historyLoading ? (
           <div className="idf-history-state">
             <div className="spinner" />
@@ -447,7 +530,12 @@ export default function Identify() {
         ) : (
           <div className="idf-history-list">
             {history.map((item) => (
-              <HistoryItem key={item.id} item={item} />
+              <HistoryItem
+                key={item.id}
+                item={item}
+                onDelete={handleDeleteItem}
+                isDeleting={deletingId === item.id || deletingId === 'all'}
+              />
             ))}
           </div>
         )}
