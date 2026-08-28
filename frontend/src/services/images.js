@@ -26,3 +26,13 @@ export async function fetchUploadHistory({ limit = 20 } = {}) {
   const { data } = await api.get('/images', { params: { limit } })
   return data.images // newest first, same shape as recognizeImage()
 }
+
+export async function deleteUploadedImage(id) {
+  const { data } = await api.delete(`/images/${id}`)
+  return data.deleted
+}
+
+export async function clearAllUploadHistory() {
+  const { data } = await api.delete('/images')
+  return data
+}
