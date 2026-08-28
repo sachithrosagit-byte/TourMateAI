@@ -402,6 +402,11 @@
     "historyTitle": "Previous identifications",
     "historyError": "We couldn't load your previous uploads. Refresh the page to try again.",
     "historyEmpty": "Photos you identify will show up here, so you can find them again later.",
+    "deleteHistoryItem": "Delete identification",
+    "confirmDelete": "Delete this identification from your history?",
+    "clearAll": "Clear history",
+    "confirmClearAll": "Are you sure you want to delete all identification history?",
+    "deleteError": "Could not delete identification. Please try again.",
     "errorFormat": "Please choose a JPG, PNG, or WebP image.",
     "errorSize": "That photo is too large — the limit is",
     "errorAnalyze": "We couldn't analyze that photo. Please try again."
