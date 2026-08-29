@@ -63,7 +63,14 @@ def train():
     print(f"Found {num_classes} classes: {class_names}")
 
     # Save class mapping
-    class_mapping = {str(i): name for i, name in enumerate(class_names)}
+    mapping_path = os.path.join(os.path.dirname(__file__), "dataset_mapping.json")
+    if os.path.exists(mapping_path):
+        with open(mapping_path, "r") as f:
+            db_mapping = json.load(f)
+    else:
+        db_mapping = {}
+        
+    class_mapping = {str(i): db_mapping.get(name, name) for i, name in enumerate(class_names)}
     with open(_CLASSES_SAVE_PATH, "w") as f:
         json.dump(class_mapping, f, indent=2)
     print(f"Saved class mapping to {_CLASSES_SAVE_PATH}")

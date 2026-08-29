@@ -82,8 +82,8 @@ def identify(image_file):
     confidence = float(predictions[predicted_index])
     
     # 4. Map index back to database Attraction
-    folder_name = _class_mapping.get(str(predicted_index))
-    if not folder_name:
+    db_name = _class_mapping.get(str(predicted_index))
+    if not db_name:
         return {
             "identified_name": "Unknown",
             "confidence": confidence,
@@ -91,13 +91,8 @@ def identify(image_file):
             "description": "Recognized a shape, but it's not mapped to a known attraction.",
         }
         
-    # The folder name is used in the dataset. Let's try to match it against the DB.
-    # Convert "Sigiriya_Rock_Fortress" to a likely matching format if needed, 
-    # but the safest is to find the attraction by exact or partial match.
-    search_term = folder_name.replace("_", " ")
-    
-    # Simple ILIKE search in the DB
-    attraction = Attraction.query.filter(Attraction.name.ilike(f"%{search_term}%")).first()
+    # Exact match in the DB
+    attraction = Attraction.query.filter_by(name=db_name).first()
     
     if attraction:
         # Confidence threshold: if it's too low, we don't confirm it.
@@ -119,7 +114,7 @@ def identify(image_file):
             
     # If the DB doesn't have it (e.g. folder name doesn't match DB well)
     return {
-        "identified_name": search_term.title(),
+        "identified_name": db_name,
         "confidence": confidence,
         "matched_attraction_id": None,
         "description": "Recognized the landmark, but could not link it to the database.",
